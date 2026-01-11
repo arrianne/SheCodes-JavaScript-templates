@@ -4,12 +4,19 @@ let todoTasks = [
   "Make dinner",
 ];
 
+let todoTasksStatus = [false, true, false];
+
 const todoList = document.getElementById("todo-list");
 
-for (const task of todoTasks) {
+for (const [index, task] of todoTasks.entries()) {
   // create a <p> element to store the task description
   const newTodoTaskTextElement = document.createElement("p");
   newTodoTaskTextElement.innerText = task;
+
+  // Apply a css class if the task is complete
+  if (todoTasksStatus[index]) {
+    newTodoTaskTextElement.classList.add("complete");
+  }
 
   // create a <li> element to store the task item
   const newTodoItemElement = document.createElement("li");

@@ -18,7 +18,16 @@ const updateItems = () => {
     itemElement.innerText = shoppingItem;
     listElement.appendChild(itemElement);
   }
+
+  // clear new item text box
+  document.getElementById("new-item-text").value = "";
 };
 
 // calling this AFTER the function exists because we are using arrow functions
 updateItems();
+
+// targets the clear button and adds an event listener to remove all items
+const clearItems = () => {
+  shoppingListItems = [];
+  updateItems();
+};

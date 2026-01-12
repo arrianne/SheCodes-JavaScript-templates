@@ -9,14 +9,25 @@ let todoTasksStatus = [false, true, false];
 
 let importanceStatus = [false, false, false];
 
+let dueDates = ["", "", ""];
+
 // ===== ADD TASK =====
 const addTask = () => {
   const newTask = document.getElementById("new-task-text");
+  const dateInput = document.getElementById("new-task-date");
+
+  const dueDate = dateInput.value; // YYYY-MM-DD or ""
+
   if (newTask.value) {
     todoTasks.push(newTask.value);
     todoTasksStatus.push(false);
     importanceStatus.push(false);
     newTask.value = "";
+    textInput = "";
+
+    dueDates.push(dueDate);
+    textInput.value = "";
+    dateInput.value = "";
     updateTodoList();
   }
 };
@@ -57,6 +68,14 @@ const createNewTodoItemElement = (task, index) => {
     completeButtonElement.value = "incomplete";
   } else {
     completeButtonElement.value = "complete";
+  }
+
+  // 📅 Due date display
+  if (dueDates[index]) {
+    const date = document.createElement("small");
+    date.innerText = `Due: ${dueDates[index]}`;
+    date.classList.add("due-date");
+    newTodoTaskElement.appendChild(date);
   }
 
   completeButtonElement.onclick = function () {

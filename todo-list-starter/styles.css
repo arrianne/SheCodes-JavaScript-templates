@@ -70,3 +70,9 @@ input[type="button"] {
 .important-task {
   font-weight: bold;
 }
+
+.due-date {
+  font-size: 0.8rem;
+  color: #666;
+  margin-right: 10px;
+}

@@ -1,20 +1,4 @@
-const addTask = () => {};
-
-const updateTodoList = () => {};
-
-const createNewTodoItemElement = (task, index) => {};
-
-const toggleComplete = (index) => {
-  // If it is complete, set it to incomplete.
-  // If it is incomplete, set it to complete.
-  if (todoTasksStatus[index] == false) {
-    todoTasksStatus[index] = true;
-  } else {
-    todoTasksStatus[index] = false;
-  }
-  console.log(todoTasksStatus);
-};
-
+// ===== STATE =====
 let todoTasks = [
   "finish JavaScript homework",
   "Clean the house",
@@ -23,9 +7,22 @@ let todoTasks = [
 
 let todoTasksStatus = [false, true, false];
 
-const todoList = document.getElementById("todo-list");
+const addTask = () => {};
 
-for (const [index, task] of todoTasks.entries()) {
+// ===== RENDER LIST =====
+
+const updateTodoList = () => {
+  const todoList = document.getElementById("todo-list");
+  todoList.innerHTML = "";
+  for (const [index, task] of todoTasks.entries()) {
+    const newTodoTaskElement = createNewTodoItemElement(task, index);
+    todoList.appendChild(newTodoTaskElement);
+  }
+};
+
+// ===== CREATE ONE TODO ITEM =====
+
+const createNewTodoItemElement = (task, index) => {
   // Create a <p> element to store the task description
   const newTodoTaskTextElement = document.createElement("p");
   newTodoTaskTextElement.innerText = task;
@@ -42,13 +39,34 @@ for (const [index, task] of todoTasks.entries()) {
   // Adding a button to mark each item as complete
   const completeButtonElement = document.createElement("input");
   completeButtonElement.type = "button";
-  completeButtonElement.value = "Completed";
+
+  // Set label based on current status
+  if (todoTasksStatus[index]) {
+    completeButtonElement.value = "incomplete";
+  } else {
+    completeButtonElement.value = "complete";
+  }
+
   completeButtonElement.onclick = function () {
     // Toggle the completion status
     toggleComplete(index);
   };
   newTodoTaskElement.appendChild(completeButtonElement);
 
-  // Add the <li> element to the list
-  todoList.appendChild(newTodoTaskElement);
-}
+  return newTodoTaskElement;
+};
+
+// ===== TOGGLE COMPLETE =====
+
+const toggleComplete = (index) => {
+  // If it is complete, set it to incomplete.
+  // If it is incomplete, set it to complete.
+  if (todoTasksStatus[index] == false) {
+    todoTasksStatus[index] = true;
+  } else {
+    todoTasksStatus[index] = false;
+  }
+  updateTodoList();
+};
+
+updateTodoList();

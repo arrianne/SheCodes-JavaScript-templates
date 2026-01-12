@@ -1,3 +1,11 @@
+const addTask = () => {};
+
+const updateTodoList = () => {};
+
+const createNewTodoItemElement = (task, index) => {};
+
+const toggleComplete = (index) => {};
+
 let todoTasks = [
   "finish JavaScript homework",
   "Clean the house",
@@ -9,27 +17,25 @@ let todoTasksStatus = [false, true, false];
 const todoList = document.getElementById("todo-list");
 
 for (const [index, task] of todoTasks.entries()) {
-  // create a <p> element to store the task description
+  // Create a <p> element to store the task description
   const newTodoTaskTextElement = document.createElement("p");
   newTodoTaskTextElement.innerText = task;
 
-  // Apply a css class if the task is complete
+  // Apply a CSS class to the completed items
   if (todoTasksStatus[index]) {
     newTodoTaskTextElement.classList.add("complete");
   }
 
-  // create a <li> element to store the task item
-  const newTodoItemElement = document.createElement("li");
-  newTodoItemElement.appendChild(newTodoTaskTextElement);
+  // Create a <li> element to contain the paragraph
+  const newTodoTaskElement = document.createElement("li");
+  newTodoTaskElement.appendChild(newTodoTaskTextElement);
 
-  // add the new todo item to the todo list
-  todoList.appendChild(newTodoItemElement);
+  // Adding a button to mark each item as complete
+  const completeButtonElement = document.createElement("input");
+  completeButtonElement.type = "button";
+  completeButtonElement.value = "Completed";
+  newTodoTaskElement.appendChild(completeButtonElement);
+
+  // Add the <li> element to the list
+  todoList.appendChild(newTodoTaskElement);
 }
-
-const addTask = () => {};
-
-const updateTodoList = () => {};
-
-const createNewTodoItemElement = (task, index) => {};
-
-const toggleComplete = (index) => {};

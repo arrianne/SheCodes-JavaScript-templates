@@ -7,7 +7,16 @@ let todoTasks = [
 
 let todoTasksStatus = [false, true, false];
 
-const addTask = () => {};
+// ===== ADD TASK =====
+const addTask = () => {
+  const newTask = document.getElementById("new-task-text");
+  if (newTask.value) {
+    todoTasks.push(newTask.value);
+    todoTasksStatus.push(false);
+    newTask.value = "";
+    updateTodoList();
+  }
+};
 
 // ===== RENDER LIST =====
 

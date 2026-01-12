@@ -34,6 +34,10 @@ for (const [index, task] of todoTasks.entries()) {
   const completeButtonElement = document.createElement("input");
   completeButtonElement.type = "button";
   completeButtonElement.value = "Completed";
+  completeButtonElement.onclick = function () {
+    // Toggle the completion status
+    toggleComplete(index);
+  };
   newTodoTaskElement.appendChild(completeButtonElement);
 
   // Add the <li> element to the list

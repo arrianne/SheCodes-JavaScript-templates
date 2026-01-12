@@ -76,3 +76,11 @@ input[type="button"] {
   color: #666;
   margin-right: 10px;
 }
+
+#todo-list li {
+  cursor: grab;
+}
+
+#todo-list li:active {
+  cursor: grabbing;
+}

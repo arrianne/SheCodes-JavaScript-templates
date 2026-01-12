@@ -1,122 +1,196 @@
-// ===== STATE =====
+// ======================================================
+// STATE
+// ======================================================
+
+// Task text
 let todoTasks = [
   "finish JavaScript homework",
   "Clean the house",
   "Make dinner",
 ];
 
+// Whether each task is completed
 let todoTasksStatus = [false, true, false];
 
+// Whether each task is marked as important
 let importanceStatus = [false, false, false];
 
+// Due dates ("" means no due date)
 let dueDates = ["", "", ""];
 
-// ===== ADD TASK =====
+// Used for drag-and-drop reordering
+let draggedIndex = null;
+
+// ======================================================
+// ADD A NEW TASK
+// ======================================================
+
 const addTask = () => {
-  const newTask = document.getElementById("new-task-text");
+  const textInput = document.getElementById("new-task-text");
   const dateInput = document.getElementById("new-task-date");
 
+  const taskText = textInput.value.trim();
   const dueDate = dateInput.value; // YYYY-MM-DD or ""
 
-  if (newTask.value) {
-    todoTasks.push(newTask.value);
-    todoTasksStatus.push(false);
-    importanceStatus.push(false);
-    newTask.value = "";
-    textInput = "";
+  // Do nothing if the task text is empty
+  if (!taskText) return;
 
-    dueDates.push(dueDate);
-    textInput.value = "";
-    dateInput.value = "";
-    updateTodoList();
-  }
+  // Add new task to all state arrays
+  todoTasks.push(taskText);
+  todoTasksStatus.push(false);
+  importanceStatus.push(false);
+  dueDates.push(dueDate);
+
+  // Clear inputs
+  textInput.value = "";
+  dateInput.value = "";
+
+  // Re-render list
+  updateTodoList();
 };
 
-// ===== RENDER LIST =====
+// ======================================================
+// RENDER THE TODO LIST
+// ======================================================
 
 const updateTodoList = () => {
   const todoList = document.getElementById("todo-list");
   todoList.innerHTML = "";
+
+  // Rebuild the list from state
   for (const [index, task] of todoTasks.entries()) {
-    const newTodoTaskElement = createNewTodoItemElement(task, index);
-    todoList.appendChild(newTodoTaskElement);
+    const todoItem = createNewTodoItemElement(task, index);
+    todoList.appendChild(todoItem);
   }
 };
 
-// ===== CREATE ONE TODO ITEM =====
+// ======================================================
+// MOVE TODO ITEM (DRAG & DROP)
+// ======================================================
 
-const createNewTodoItemElement = (task, index) => {
-  // Create a <p> element to store the task description
-  const newTodoTaskTextElement = document.createElement("p");
-  newTodoTaskTextElement.innerText = task;
+const moveTodo = (fromIndex, toIndex) => {
+  if (fromIndex === toIndex) return;
 
-  // Apply a CSS class to the completed items
-  if (todoTasksStatus[index]) {
-    newTodoTaskTextElement.classList.add("complete");
-  }
-
-  // Create a <li> element to contain the paragraph
-  const newTodoTaskElement = document.createElement("li");
-  newTodoTaskElement.appendChild(newTodoTaskTextElement);
-
-  // Adding a button to mark each item as complete
-  const completeButtonElement = document.createElement("input");
-  completeButtonElement.type = "button";
-
-  // Set label based on current status
-  if (todoTasksStatus[index]) {
-    completeButtonElement.value = "incomplete";
-  } else {
-    completeButtonElement.value = "complete";
-  }
-
-  // 📅 Due date display
-  if (dueDates[index]) {
-    const date = document.createElement("small");
-    date.innerText = `Due: ${dueDates[index]}`;
-    date.classList.add("due-date");
-    newTodoTaskElement.appendChild(date);
-  }
-
-  completeButtonElement.onclick = function () {
-    // Toggle the completion status
-    toggleComplete(index);
+  // Helper to move an item inside an array
+  const moveInArray = (arr) => {
+    const [item] = arr.splice(fromIndex, 1);
+    arr.splice(toIndex, 0, item);
   };
-  newTodoTaskElement.appendChild(completeButtonElement);
 
-  // 🚩 Flag button for importance
-  const flagButtonElement = document.createElement("button");
-  flagButtonElement.type = "button";
-  flagButtonElement.classList.add("flag-button");
-  flagButtonElement.innerText = "🚩";
+  // Keep all arrays in sync
+  moveInArray(todoTasks);
+  moveInArray(todoTasksStatus);
+  moveInArray(importanceStatus);
+  moveInArray(dueDates);
 
-  if (importanceStatus[index]) {
-    flagButtonElement.classList.add("important");
-  }
-
-  flagButtonElement.onclick = () => toggleImportant(index);
-  newTodoTaskElement.appendChild(flagButtonElement);
-
-  return newTodoTaskElement;
-};
-
-// ===== TOGGLE COMPLETE =====
-
-const toggleComplete = (index) => {
-  // If it is complete, set it to incomplete.
-  // If it is incomplete, set it to complete.
-  if (todoTasksStatus[index] == false) {
-    todoTasksStatus[index] = true;
-  } else {
-    todoTasksStatus[index] = false;
-  }
   updateTodoList();
 };
 
-//  ===== TOGGLE IMPORTANT =====
+// ======================================================
+// CREATE A SINGLE TODO LIST ITEM (<li>)
+// ======================================================
+
+const createNewTodoItemElement = (task, index) => {
+  const li = document.createElement("li");
+
+  // ------------------
+  // Task text
+  // ------------------
+  const text = document.createElement("p");
+  text.innerText = task;
+
+  if (todoTasksStatus[index]) {
+    text.classList.add("complete");
+  }
+
+  if (importanceStatus[index]) {
+    text.classList.add("important-task");
+  }
+
+  li.appendChild(text);
+
+  // ------------------
+  // Drag & drop setup
+  // ------------------
+  li.draggable = true;
+  li.dataset.index = index;
+
+  li.addEventListener("dragstart", (e) => {
+    draggedIndex = Number(li.dataset.index);
+    e.dataTransfer.effectAllowed = "move";
+  });
+
+  li.addEventListener("dragover", (e) => {
+    e.preventDefault(); // Required to allow dropping
+  });
+
+  li.addEventListener("drop", (e) => {
+    e.preventDefault();
+    const targetIndex = Number(li.dataset.index);
+
+    if (draggedIndex === null) return;
+
+    moveTodo(draggedIndex, targetIndex);
+    draggedIndex = null;
+  });
+
+  // ------------------
+  // Due date display
+  // ------------------
+  if (dueDates[index]) {
+    const dateEl = document.createElement("small");
+    dateEl.innerText = `Due: ${dueDates[index]}`;
+    dateEl.classList.add("due-date");
+    li.appendChild(dateEl);
+  }
+
+  // ------------------
+  // Complete / incomplete button
+  // ------------------
+  const completeButton = document.createElement("input");
+  completeButton.type = "button";
+  completeButton.value = todoTasksStatus[index] ? "incomplete" : "complete";
+  completeButton.onclick = () => toggleComplete(index);
+  li.appendChild(completeButton);
+
+  // ------------------
+  // Important flag button
+  // ------------------
+  const flagButton = document.createElement("button");
+  flagButton.type = "button";
+  flagButton.classList.add("flag-button");
+  flagButton.innerText = "🚩";
+
+  if (importanceStatus[index]) {
+    flagButton.classList.add("important");
+  }
+
+  flagButton.onclick = () => toggleImportant(index);
+  li.appendChild(flagButton);
+
+  return li;
+};
+
+// ======================================================
+// TOGGLE COMPLETE STATUS
+// ======================================================
+
+const toggleComplete = (index) => {
+  todoTasksStatus[index] = !todoTasksStatus[index];
+  updateTodoList();
+};
+
+// ======================================================
+// TOGGLE IMPORTANT STATUS
+// ======================================================
+
 const toggleImportant = (index) => {
   importanceStatus[index] = !importanceStatus[index];
   updateTodoList();
 };
+
+// ======================================================
+// INITIAL RENDER
+// ======================================================
 
 updateTodoList();

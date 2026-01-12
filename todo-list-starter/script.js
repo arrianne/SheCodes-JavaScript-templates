@@ -7,12 +7,15 @@ let todoTasks = [
 
 let todoTasksStatus = [false, true, false];
 
+let importanceStatus = [false, false, false];
+
 // ===== ADD TASK =====
 const addTask = () => {
   const newTask = document.getElementById("new-task-text");
   if (newTask.value) {
     todoTasks.push(newTask.value);
     todoTasksStatus.push(false);
+    importanceStatus.push(false);
     newTask.value = "";
     updateTodoList();
   }
@@ -62,6 +65,19 @@ const createNewTodoItemElement = (task, index) => {
   };
   newTodoTaskElement.appendChild(completeButtonElement);
 
+  // 🚩 Flag button for importance
+  const flagButtonElement = document.createElement("button");
+  flagButtonElement.type = "button";
+  flagButtonElement.classList.add("flag-button");
+  flagButtonElement.innerText = "🚩";
+
+  if (importanceStatus[index]) {
+    flagButtonElement.classList.add("important");
+  }
+
+  flagButtonElement.onclick = () => toggleImportant(index);
+  newTodoTaskElement.appendChild(flagButtonElement);
+
   return newTodoTaskElement;
 };
 
@@ -75,6 +91,12 @@ const toggleComplete = (index) => {
   } else {
     todoTasksStatus[index] = false;
   }
+  updateTodoList();
+};
+
+//  ===== TOGGLE IMPORTANT =====
+const toggleImportant = (index) => {
+  importanceStatus[index] = !importanceStatus[index];
   updateTodoList();
 };
 

@@ -4,7 +4,16 @@ const updateTodoList = () => {};
 
 const createNewTodoItemElement = (task, index) => {};
 
-const toggleComplete = (index) => {};
+const toggleComplete = (index) => {
+  // If it is complete, set it to incomplete.
+  // If it is incomplete, set it to complete.
+  if (todoTasksStatus[index] == false) {
+    todoTasksStatus[index] = true;
+  } else {
+    todoTasksStatus[index] = false;
+  }
+  console.log(todoTasksStatus);
+};
 
 let todoTasks = [
   "finish JavaScript homework",

@@ -10,7 +10,7 @@ let todoTasks = [
 ];
 
 // Whether each task is completed
-let todoTasksStatus = [false, true, false];
+let todoTasksStatus = [false, false, false];
 
 // Whether each task is marked as important
 let importanceStatus = [false, false, false];
@@ -21,6 +21,9 @@ let dueDates = ["", "", ""];
 // Used for drag-and-drop reordering
 let draggedIndex = null;
 
+// Category for each task (must stay in sync with other arrays)
+let categories = ["work", "home", "personal"];
+
 // ======================================================
 // ADD A NEW TASK
 // ======================================================
@@ -28,9 +31,11 @@ let draggedIndex = null;
 const addTask = () => {
   const textInput = document.getElementById("new-task-text");
   const dateInput = document.getElementById("new-task-date");
+  const categoryInput = document.getElementById("new-task-category");
 
   const taskText = textInput.value.trim();
   const dueDate = dateInput.value; // YYYY-MM-DD or ""
+  const category = categoryInput.value; // "work" | "home" | "personal"
 
   // Do nothing if the task text is empty
   if (!taskText) return;
@@ -40,6 +45,9 @@ const addTask = () => {
   todoTasksStatus.push(false);
   importanceStatus.push(false);
   dueDates.push(dueDate);
+  categories.push("personal");
+  categories.push(category);
+  categoryInput.value = "personal"; // reset dropdown to default
 
   // Clear inputs
   textInput.value = "";
@@ -82,7 +90,7 @@ const moveTodo = (fromIndex, toIndex) => {
   moveInArray(todoTasksStatus);
   moveInArray(importanceStatus);
   moveInArray(dueDates);
-
+  moveInArray(categories);
   updateTodoList();
 };
 
@@ -91,13 +99,21 @@ const moveTodo = (fromIndex, toIndex) => {
 // ======================================================
 
 const createNewTodoItemElement = (task, index) => {
+  //create a list item to hold the task
   const li = document.createElement("li");
 
-  // ------------------
-  // Task text
-  // ------------------
+  // Apply category class for background colour
+  li.classList.add(`category-${categories[index]}`);
+
+  // create a p element to hold the task text
   const text = document.createElement("p");
   text.innerText = task;
+
+  // make cursor up/down on drag
+  const handle = document.createElement("span");
+  handle.className = "drag-handle";
+  handle.textContent = "↕"; // or "⋮⋮"
+  li.prepend(handle);
 
   if (todoTasksStatus[index]) {
     text.classList.add("complete");
@@ -149,13 +165,14 @@ const createNewTodoItemElement = (task, index) => {
   // ------------------
   const completeButton = document.createElement("input");
   completeButton.type = "button";
-  completeButton.value = todoTasksStatus[index] ? "incomplete" : "complete";
+  completeButton.value = todoTasksStatus[index] ? "completed" : "complete";
   completeButton.onclick = () => toggleComplete(index);
   li.appendChild(completeButton);
 
   // ------------------
   // Important flag button
   // ------------------
+
   const flagButton = document.createElement("button");
   flagButton.type = "button";
   flagButton.classList.add("flag-button");

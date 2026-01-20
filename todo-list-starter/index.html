@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 
 <html lang="en">
   <head>
@@ -15,8 +15,17 @@
     <h1>My Todo List</h1>
     <ul id="todo-list"></ul>
     <div id="new-task-input">
+      <label hidden for="new-task-text">Add a todo</label>
       <input id="new-task-text" type="text" placeholder="Todo task" />
       <input id="new-task-date" type="date" />
+      <select id="new-task-category" aria-label="Category">
+        <option value="work" class="opt-work">🟦 Work</option>
+        <option value="home" class="opt-home">🟩 Home</option>
+        <option value="personal" class="opt-personal" selected>
+          🟨 Personal
+        </option>
+      </select>
+
       <input
         id="new-task-button"
         type="button"

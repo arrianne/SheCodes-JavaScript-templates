@@ -1,7 +1,13 @@
 body {
-  background-color: #070d0d;
+  background-color: #b0d2d7;
   font-family: sans-serif;
   color: #fff;
+  margin: 20%;
+}
+
+label {
+  color: rgb(58, 58, 58);
+  margin: 5px;
 }
 
 ul {
@@ -13,7 +19,7 @@ li {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border: 2px solid #b30049;
+
   padding: 2px;
   margin: 2px;
   color: #070d0d;
@@ -34,19 +40,21 @@ p {
 input {
   font-size: 1.2rem;
   border: 2px solid #fff;
-  padding: 6px;
+  padding: 10px;
 }
 
-input[type="text"] {
+/* input[type="text"] {
   flex-basis: 80%;
-}
+} */
 input[type="button"]#new-task-button {
   flex-grow: 1;
 }
 
 input[type="button"] {
-  background: #b30049;
+  background: #00b3a5;
   color: #fff;
+  padding: 10px;
+  border-radius: 5px;
 }
 
 .complete {
@@ -83,4 +91,65 @@ input[type="button"] {
 
 #todo-list li:active {
   cursor: grabbing;
+}
+
+.drag-handle {
+  cursor: ns-resize;
+  user-select: none;
+  padding-right: 10px;
+  opacity: 0.7;
+}
+
+.drag-handle:hover {
+  opacity: 1;
+}
+
+/* Base styling */
+#todo-list li {
+  padding: 12px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+  list-style: none;
+}
+
+/* Category colours */
+.category-work {
+  background-color: #e0f2fe; /* light blue */
+}
+
+.category-home {
+  background-color: #dcfce7; /* light green */
+}
+
+.category-personal {
+  background-color: #fef3c7; /* soft yellow */
+}
+
+/* Category option colours */
+
+#new-task-category {
+  font-size: 1rem; /* larger text */
+  padding: 10px 14px; /* internal spacing */
+  min-width: 160px; /* makes it feel like a proper control */
+  border-radius: 8px; /* soft rounded corners */
+  border: none;
+  cursor: pointer;
+}
+
+#new-task-category .opt-work {
+  background-color: #e0f2fe;
+}
+
+#new-task-category .opt-home {
+  background-color: #dcfce7;
+}
+
+#new-task-category .opt-personal {
+  background-color: #fef3c7;
+}
+
+/* Keep text readable */
+#new-task-category option {
+  padding: 10px;
+  margin: 20px;
 }
